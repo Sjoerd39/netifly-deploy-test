@@ -4,29 +4,21 @@ import {
   getCustomProperty,
 } from "./updateCustomProperty.js"
 
-const SPEED = 0.025
-const WM_INTERVAL_MIN = 750
-const WM_INTERVAL_MAX = 2000
+const SPEED = 0.05
+const CACTUS_INTERVAL_MIN = 500
+const CACTUS_INTERVAL_MAX = 2000
 const worldElem = document.querySelector("[data-world]")
-const WM_FRAME_COUNT = 3
 
 let nextCactusTime
-
-export function setupWM() {
-  wmFrame = 0
-  setCustomProperty(wmElem, "--bottom", 0)
-}
-
-
-export function setupWM() {
-  nextWMTime = WM_INTERVAL_MIN
-  document.querySelectorAll("[wm-cactus]").forEach(cactus => {
+export function setupCactus() {
+  nextCactusTime = CACTUS_INTERVAL_MIN
+  document.querySelectorAll("[data-cactus]").forEach(cactus => {
     cactus.remove()
   })
 }
 
-export function updateWM(delta, speedScale) {
-  document.querySelectorAll("[wm-cactus]").forEach(cactus => {
+export function updateCactus(delta, speedScale) {
+  document.querySelectorAll("[data-cactus]").forEach(cactus => {
     incrementCustomProperty(cactus, "--left", delta * speedScale * SPEED * -1)
     if (getCustomProperty(cactus, "--left") <= -100) {
       cactus.remove()
@@ -36,32 +28,22 @@ export function updateWM(delta, speedScale) {
   if (nextCactusTime <= 0) {
     createCactus()
     nextCactusTime =
-      randomNumberBetween(WM_INTERVAL_MIN, WM_INTERVAL_MAX) / speedScale
+      randomNumberBetween(CACTUS_INTERVAL_MIN, CACTUS_INTERVAL_MAX) / speedScale
   }
   nextCactusTime -= delta
 }
 
 export function getCactusRects() {
-  return [...document.querySelectorAll("[wm-cactus]")].map(cactus => {
+  return [...document.querySelectorAll("[data-cactus]")].map(cactus => {
     return cactus.getBoundingClientRect()
   })
 }
 
-function handlewindmill(delta, speedScale) {
-  if (currentFrameTime >= FRAME_TIME) {
-    wmFrame = (wmFrame + 1) % WM_FRAME_COUNT
-    wmElem.src = `imgs/s-run-${wmFrame}.png`
-    currentFrameTime -= FRAME_TIME
-  }
-  currentFrameTime += delta * speedScale
-}
-
-
 function createCactus() {
   const cactus = document.createElement("img")
   cactus.dataset.cactus = true
-  cactus.src = "imgs/windmill-0.png"
-  cactus.classList.add("windmill")
+  cactus.src = "imgs/cactus.png"
+  cactus.classList.add("cactus")
   setCustomProperty(cactus, "--left", 100)
   worldElem.append(cactus)
 }
